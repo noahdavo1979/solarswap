@@ -1,9 +1,9 @@
+// backend/routes/admin.js
 const express = require('express');
 
-module.exports = (offersStore, tradesStore) => {
+module.exports = (offersStore = [], tradesStore = []) => {
   const router = express.Router();
 
-  // GET /admin/stats - simple stats for admin panel
   router.get('/stats', (req, res) => {
     const totalOffers = offersStore.length;
     const totalTrades = tradesStore.length;
@@ -12,15 +12,8 @@ module.exports = (offersStore, tradesStore) => {
     res.json({ totalOffers, totalTrades, totalKWhTraded, totalRevenue });
   });
 
-  // GET /admin/offers - for admin view
-  router.get('/offers', (req, res) => {
-    res.json(offersStore);
-  });
-
-  // GET /admin/trades - for admin view
-  router.get('/trades', (req, res) => {
-    res.json(tradesStore);
-  });
+  router.get('/offers', (req, res) => res.json(offersStore));
+  router.get('/trades', (req, res) => res.json(tradesStore));
 
   return router;
 };
