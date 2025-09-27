@@ -1,19 +1,19 @@
+// backend/routes/offers.js
 const express = require('express');
 
-module.exports = (offersStore) => {
+module.exports = (offersStore = []) => {
   const router = express.Router();
 
-  // GET /offers - list available offers
+  // GET /offers
   router.get('/', (req, res) => {
-    res.json(offersStore.filter(o => o.remainingKWh > 0));
+    res.json(offersStore.filter(o => (o.remainingKWh ?? 0) > 0));
   });
 
-  // POST /offers - create a new offer (seller)
-  // body: { seller, amountKWh, pricePerKWh }
+  // POST /offers  { seller, amountKWh, pricePerKWh }
   router.post('/', (req, res) => {
     const { seller, amountKWh, pricePerKWh } = req.body;
     if (!seller || !amountKWh || !pricePerKWh) {
-      return res.status(400).json({ error: 'Missing fields' });
+      return res.status(400).json({ error: 'Missing seller, amountKWh or pricePerKWh' });
     }
     const id = offersStore.length + 1;
     const offer = {
@@ -28,13 +28,13 @@ module.exports = (offersStore) => {
     res.json(offer);
   });
 
-  // GET /offers/:id - single offer
+  // GET /offers/:id
   router.get('/:id', (req, res) => {
     const id = Number(req.params.id);
     const o = offersStore.find(x => x.id === id);
-    if (!o) return res.status(404).json({ error: 'Not found' });
+    if (!o) return res.status(404).json({ error: 'Offer not found' });
     res.json(o);
   });
 
-  module.exports = router;
+  return router;
 };
