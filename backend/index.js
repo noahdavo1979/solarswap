@@ -1,12 +1,11 @@
 // backend/index.js (safe loader)
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
-const app = express();
+const offersRouter = require('./routes/offers')();
+const tradesRouter = require('./routes/trades')();
+const adminRouter  = require('./routes/admin')();
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use('/offers', offersRouter);
+app.use('/trades', tradesRouter);
+app.use('/admin', adminRouter);
 
 // In-memory stores for quick cloud demo:
 const offersStore = [];
